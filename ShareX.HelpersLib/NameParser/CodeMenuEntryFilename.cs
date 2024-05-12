@@ -68,6 +68,7 @@ namespace ShareX.HelpersLib
         public static readonly CodeMenuEntryFilename uln = new CodeMenuEntryFilename("uln", Resources.ReplCodeMenuEntry_uln_User_login_name, Resources.ReplCodeMenuCategory_Computer);
         public static readonly CodeMenuEntryFilename cn = new CodeMenuEntryFilename("cn", Resources.ReplCodeMenuEntry_cn_Computer_name, Resources.ReplCodeMenuCategory_Computer);
         public static readonly CodeMenuEntryFilename n = new CodeMenuEntryFilename("n", Resources.ReplCodeMenuEntry_n_New_line);
+        public static readonly CodeMenuEntryFilename ulid = new CodeMenuEntryFilename("ulid", Resources.ReplCodeMenuEntry_guid_Random_guid, Resources.ReplCodeMenuCategory_Random);
 
         public CodeMenuEntryFilename(string value, string description, string category = null) : base(value, description, category)
         {
