@@ -2,7 +2,7 @@
 
 /*
     ShareX - A program that allows you to take screenshots and share any file type
-    Copyright (c) 2007-2024 ShareX Team
+    Copyright (c) 2007-2026 ShareX Team
 
     This program is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License
@@ -26,6 +26,8 @@
 using System;
 using System.IO;
 using System.IO.Pipes;
+using System.Security.AccessControl;
+using System.Security.Principal;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -44,7 +46,7 @@ namespace ShareX.HelpersLib
         private const int MaxArgumentsLength = 100;
         private const int ConnectTimeout = 5000;
 
-        private readonly Mutex mutex;
+        private readonly MutexManager mutex;
         private CancellationTokenSource cts;
 
         public SingleInstanceManager(string mutexName, string pipeName, string[] args) : this(mutexName, pipeName, true, args)
@@ -57,31 +59,21 @@ namespace ShareX.HelpersLib
             PipeName = pipeName;
             IsSingleInstance = isSingleInstance;
 
-            mutex = new Mutex(false, MutexName);
+            mutex = new MutexManager(MutexName, 0);
+            IsFirstInstance = mutex.HasHandle;
 
-            try
+            if (IsSingleInstance)
             {
-                IsFirstInstance = mutex.WaitOne(100, false);
-
-                if (IsSingleInstance)
+                if (IsFirstInstance)
                 {
-                    if (IsFirstInstance)
-                    {
-                        cts = new CancellationTokenSource();
+                    cts = new CancellationTokenSource();
 
-                        Task.Run(ListenForConnectionsAsync, cts.Token);
-                    }
-                    else
-                    {
-                        RedirectArgumentsToFirstInstance(args);
-                    }
+                    Task.Run(ListenForConnectionsAsync, cts.Token);
                 }
-            }
-            catch (AbandonedMutexException)
-            {
-                DebugHelper.WriteLine("Single instance mutex found abandoned from another process.");
-
-                IsFirstInstance = true;
+                else
+                {
+                    RedirectArgumentsToFirstInstance(args);
+                }
             }
         }
 
@@ -101,7 +93,14 @@ namespace ShareX.HelpersLib
 
                 try
                 {
-                    using (NamedPipeServerStream namedPipeServer = new NamedPipeServerStream(PipeName, PipeDirection.InOut, 1, PipeTransmissionMode.Byte, PipeOptions.Asynchronous))
+                    PipeSecurity pipeSecurity = new PipeSecurity();
+
+                    using (WindowsIdentity identity = WindowsIdentity.GetCurrent())
+                    {
+                        pipeSecurity.AddAccessRule(new PipeAccessRule(identity.User, PipeAccessRights.ReadWrite, AccessControlType.Allow));
+                    }
+
+                    using (NamedPipeServerStream namedPipeServer = NamedPipeServerStreamAcl.Create(PipeName, PipeDirection.InOut, 1, PipeTransmissionMode.Byte, PipeOptions.Asynchronous, 0, 0, pipeSecurity))
                     {
                         namedPipeServerCreated = true;
 
@@ -175,15 +174,7 @@ namespace ShareX.HelpersLib
                 cts.Dispose();
             }
 
-            if (mutex != null)
-            {
-                if (IsFirstInstance)
-                {
-                    mutex.ReleaseMutex();
-                }
-
-                mutex.Dispose();
-            }
+            mutex?.Dispose();
         }
     }
 }

@@ -2,7 +2,7 @@
 
 /*
     ShareX - A program that allows you to take screenshots and share any file type
-    Copyright (c) 2007-2024 ShareX Team
+    Copyright (c) 2007-2026 ShareX Team
 
     This program is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License
@@ -34,6 +34,7 @@ namespace ShareX
     public static class IntegrationHelpers
     {
         private static readonly string ApplicationPath = $"\"{Application.ExecutablePath}\"";
+        private static readonly string FileIconPath = $"\"{FileHelpers.GetAbsolutePath("ShareX_File_Icon.ico")}\"";
 
         private static readonly string ShellExtMenuName = "ShareX";
         private static readonly string ShellExtMenuFiles = $@"Software\Classes\*\shell\{ShellExtMenuName}";
@@ -56,7 +57,7 @@ namespace ShareX
         private static readonly string ShellCustomUploaderAssociatePath = $@"Software\Classes\{ShellCustomUploaderExtensionValue}";
         private static readonly string ShellCustomUploaderAssociateValue = "ShareX custom uploader";
         private static readonly string ShellCustomUploaderIconPath = $@"{ShellCustomUploaderAssociatePath}\DefaultIcon";
-        private static readonly string ShellCustomUploaderIconValue = $"{ApplicationPath},0";
+        private static readonly string ShellCustomUploaderIconValue = $"{FileIconPath}";
         private static readonly string ShellCustomUploaderCommandPath = $@"{ShellCustomUploaderAssociatePath}\shell\open\command";
         private static readonly string ShellCustomUploaderCommandValue = $"{ApplicationPath} -CustomUploader \"%1\"";
 
@@ -65,7 +66,7 @@ namespace ShareX
         private static readonly string ShellImageEffectAssociatePath = $@"Software\Classes\{ShellImageEffectExtensionValue}";
         private static readonly string ShellImageEffectAssociateValue = "ShareX image effect";
         private static readonly string ShellImageEffectIconPath = $@"{ShellImageEffectAssociatePath}\DefaultIcon";
-        private static readonly string ShellImageEffectIconValue = $"{ApplicationPath},0";
+        private static readonly string ShellImageEffectIconValue = $"{FileIconPath}";
         private static readonly string ShellImageEffectCommandPath = $@"{ShellImageEffectAssociatePath}\shell\open\command";
         private static readonly string ShellImageEffectCommandValue = $"{ApplicationPath} -ImageEffect \"%1\"";
 
@@ -122,8 +123,8 @@ namespace ShareX
 
         private static void UnregisterShellContextMenuButton()
         {
-            RegistryHelpers.RemoveRegistry(ShellExtMenuFiles, true);
-            RegistryHelpers.RemoveRegistry(ShellExtMenuDirectory, true);
+            RegistryHelpers.RemoveRegistry(ShellExtMenuFiles);
+            RegistryHelpers.RemoveRegistry(ShellExtMenuDirectory);
         }
 
         public static bool CheckEditShellContextMenuButton()
@@ -169,7 +170,7 @@ namespace ShareX
 
         private static void UnregisterEditShellContextMenuButton()
         {
-            RegistryHelpers.RemoveRegistry(ShellExtEditImage, true);
+            RegistryHelpers.RemoveRegistry(ShellExtEditImage);
         }
 
         public static bool CheckCustomUploaderExtension()
@@ -220,7 +221,7 @@ namespace ShareX
         private static void UnregisterCustomUploaderExtension()
         {
             RegistryHelpers.RemoveRegistry(ShellCustomUploaderExtensionPath);
-            RegistryHelpers.RemoveRegistry(ShellCustomUploaderAssociatePath, true);
+            RegistryHelpers.RemoveRegistry(ShellCustomUploaderAssociatePath);
         }
 
         public static bool CheckImageEffectExtension()
@@ -271,7 +272,7 @@ namespace ShareX
         private static void UnregisterImageEffectExtension()
         {
             RegistryHelpers.RemoveRegistry(ShellImageEffectExtensionPath);
-            RegistryHelpers.RemoveRegistry(ShellImageEffectAssociatePath, true);
+            RegistryHelpers.RemoveRegistry(ShellImageEffectAssociatePath);
         }
 
         public static bool CheckChromeExtensionSupport()

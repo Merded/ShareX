@@ -2,7 +2,7 @@
 
 /*
     ShareX - A program that allows you to take screenshots and share any file type
-    Copyright (c) 2007-2024 ShareX Team
+    Copyright (c) 2007-2026 ShareX Team
 
     This program is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License
@@ -25,6 +25,7 @@
 
 using Newtonsoft.Json;
 using ShareX.HelpersLib;
+using ShareX.ImageEditor.Hosting;
 using ShareX.ImageEffectsLib;
 using ShareX.IndexerLib;
 using ShareX.MediaLib;
@@ -53,7 +54,7 @@ namespace ShareX
         public HotkeyType Job = HotkeyType.None;
 
         public bool UseDefaultAfterCaptureJob = true;
-        public AfterCaptureTasks AfterCaptureJob = AfterCaptureTasks.CopyImageToClipboard | AfterCaptureTasks.SaveImageToFile | AfterCaptureTasks.UploadImageToHost;
+        public AfterCaptureTasks AfterCaptureJob = AfterCaptureTasks.CopyImageToClipboard | AfterCaptureTasks.SaveImageToFile;
 
         public bool UseDefaultAfterUploadJob = true;
         public AfterUploadTasks AfterUploadJob = AfterUploadTasks.CopyURLToClipboard;
@@ -65,7 +66,7 @@ namespace ShareX
         public FileDestination TextFileDestination = FileDestination.Dropbox;
         public FileDestination FileDestination = FileDestination.Dropbox;
         public UrlShortenerType URLShortenerDestination = UrlShortenerType.BITLY;
-        public URLSharingServices URLSharingServiceDestination = URLSharingServices.Twitter;
+        public URLSharingServices URLSharingServiceDestination = URLSharingServices.Email;
 
         public bool OverrideFTP = false;
         public int FTPIndex = 0;
@@ -308,6 +309,7 @@ namespace ShareX
 
         public bool PlaySoundAfterCapture = true;
         public bool PlaySoundAfterUpload = true;
+        public bool PlaySoundAfterAction = true;
         public bool ShowToastNotificationAfterTaskCompleted = true;
         public float ToastWindowDuration = 3f;
         public float ToastWindowFadeDuration = 1f;
@@ -317,14 +319,15 @@ namespace ShareX
         public ToastClickAction ToastWindowRightClickAction = ToastClickAction.CloseNotification;
         public ToastClickAction ToastWindowMiddleClickAction = ToastClickAction.AnnotateImage;
         public bool ToastWindowAutoHide = true;
+        public bool DisableNotificationsOnFullscreen = false;
         public bool UseCustomCaptureSound = false;
         public string CustomCaptureSoundPath = "";
         public bool UseCustomTaskCompletedSound = false;
         public string CustomTaskCompletedSoundPath = "";
+        public bool UseCustomActionCompletedSound = false;
+        public string CustomActionCompletedSoundPath = "";
         public bool UseCustomErrorSound = false;
         public string CustomErrorSoundPath = "";
-        public bool DisableNotifications = false;
-        public bool DisableNotificationsOnFullscreen = false;
 
         #endregion
     }
@@ -376,6 +379,7 @@ namespace ShareX
         public int CaptureShadowOffset = 100;
         public bool CaptureClientArea = false;
         public bool CaptureAutoHideTaskbar = false;
+        public bool CaptureAutoHideDesktopIcons = false;
         public Rectangle CaptureCustomRegion = new Rectangle(0, 0, 0, 0);
         public string CaptureCustomWindow = "";
 
@@ -460,6 +464,10 @@ namespace ShareX
         public VideoConverterOptions VideoConverterOptions = new VideoConverterOptions();
         public VideoThumbnailOptions VideoThumbnailOptions = new VideoThumbnailOptions();
         public BorderlessWindowSettings BorderlessWindowSettings = new BorderlessWindowSettings();
+        public AIOptions AIOptions = new AIOptions();
+        public ImageEditorOptions ImageEditorOptions = new ImageEditorOptions();
+        public bool UseLegacyImageEditor = false;
+        public bool ShowImageEditorSelector = true;
     }
 
     public class TaskSettingsAdvanced

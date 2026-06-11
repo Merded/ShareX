@@ -2,7 +2,7 @@
 
 /*
     ShareX - A program that allows you to take screenshots and share any file type
-    Copyright (c) 2007-2024 ShareX Team
+    Copyright (c) 2007-2026 ShareX Team
 
     This program is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License
@@ -54,8 +54,12 @@ namespace ShareX.ScreenCaptureLib
                     cts.CancelAfter(Timeout);
                 }
 
-                EnumWindowsProc ewp = EvalWindow;
-                NativeMethods.EnumWindows(ewp, IntPtr.Zero);
+                bool EvalWindow(IntPtr hWnd, IntPtr _)
+                {
+                    return CheckHandle(hWnd, null);
+                }
+
+                NativeMethods.EnumWindows(EvalWindow, IntPtr.Zero);
             }
             catch
             {
@@ -92,18 +96,10 @@ namespace ShareX.ScreenCaptureLib
             return result;
         }
 
-        private bool EvalWindow(IntPtr hWnd, IntPtr lParam)
+        private bool CheckHandle(IntPtr handle, Rectangle? clipRect)
         {
-            return CheckHandle(hWnd, true);
-        }
+            bool isWindow = clipRect == null;
 
-        private bool EvalControl(IntPtr hWnd, IntPtr lParam)
-        {
-            return CheckHandle(hWnd, false);
-        }
-
-        private bool CheckHandle(IntPtr handle, bool isWindow)
-        {
             if (cts != null && cts.IsCancellationRequested)
             {
                 return false;
@@ -112,6 +108,22 @@ namespace ShareX.ScreenCaptureLib
             if (handle == IgnoreHandle || !NativeMethods.IsWindowVisible(handle) || (isWindow && NativeMethods.IsWindowCloaked(handle)))
             {
                 return true;
+            }
+
+            // Skip non-activatable tool windows (tiling manager overlays, system
+            // auxiliaries, etc.).  These are never the "real" application the user
+            // intends to capture, and including them causes screenshot metadata
+            // (filename, window title) to reflect the overlay instead of the app
+            // underneath.
+            if (isWindow)
+            {
+                const long WS_EX_TOOLWINDOW = 0x00000080L;
+                const long WS_EX_NOACTIVATE = 0x08000000L;
+                long exStyle = (long)NativeMethods.GetWindowLong(handle, NativeConstants.GWL_EXSTYLE);
+                if ((exStyle & WS_EX_TOOLWINDOW) != 0 && (exStyle & WS_EX_NOACTIVATE) != 0)
+                {
+                    return true;
+                }
             }
 
             SimpleWindowInfo windowInfo = new SimpleWindowInfo(handle);
@@ -123,7 +135,8 @@ namespace ShareX.ScreenCaptureLib
             }
             else
             {
-                windowInfo.Rectangle = NativeMethods.GetWindowRect(handle);
+                Rectangle rect = NativeMethods.GetWindowRect(handle);
+                windowInfo.Rectangle = Rectangle.Intersect(rect, clipRect.Value);
             }
 
             if (!windowInfo.Rectangle.IsValid())
@@ -135,8 +148,12 @@ namespace ShareX.ScreenCaptureLib
             {
                 parentHandles.Add(handle);
 
-                EnumWindowsProc ewp = EvalControl;
-                NativeMethods.EnumChildWindows(handle, ewp, IntPtr.Zero);
+                bool EvalControl(IntPtr hWnd, IntPtr _)
+                {
+                    return CheckHandle(hWnd, windowInfo.Rectangle);
+                }
+
+                NativeMethods.EnumChildWindows(handle, EvalControl, IntPtr.Zero);
             }
 
             if (isWindow)

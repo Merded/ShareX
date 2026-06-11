@@ -2,7 +2,7 @@
 
 /*
     ShareX - A program that allows you to take screenshots and share any file type
-    Copyright (c) 2007-2024 ShareX Team
+    Copyright (c) 2007-2026 ShareX Team
 
     This program is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License
@@ -24,6 +24,7 @@
 #endregion License Information (GPL v3)
 
 using ShareX.HelpersLib;
+using ShareX.Properties;
 using System;
 using System.Drawing;
 using System.IO;
@@ -168,7 +169,7 @@ namespace ShareX
             {
                 gBuffer.DrawImage(Config.Image, 1, 1, Config.Image.Width, Config.Image.Height);
 
-                if (isMouseInside && !string.IsNullOrEmpty(Config.URL))
+                if (isMouseInside && !string.IsNullOrEmpty(Config.Text))
                 {
                     Rectangle textRect = new Rectangle(0, 0, rect.Width, 40);
 
@@ -177,7 +178,7 @@ namespace ShareX
                         gBuffer.FillRectangle(brush, textRect);
                     }
 
-                    TextRenderer.DrawText(gBuffer, Config.URL, Config.TextFont, textRect.Offset(-urlPadding), Color.White, TextFormatFlags.Left | TextFormatFlags.EndEllipsis);
+                    TextRenderer.DrawText(gBuffer, Config.Text, Config.TextFont, textRect.Offset(-urlPadding), Color.White, TextFormatFlags.Left | TextFormatFlags.EndEllipsis);
                 }
             }
             else if (!string.IsNullOrEmpty(Config.Text))
@@ -374,6 +375,10 @@ namespace ShareX
                     {
                         ClipboardHelpers.CopyText(Config.URL);
                     }
+                    else if (!string.IsNullOrEmpty(Config.FilePath))
+                    {
+                        ClipboardHelpers.CopyText(Config.FilePath);
+                    }
                     break;
                 case ToastClickAction.OpenFile:
                     if (!string.IsNullOrEmpty(Config.FilePath))
@@ -392,6 +397,10 @@ namespace ShareX
                     {
                         URLHelpers.OpenURL(Config.URL);
                     }
+                    else if (!string.IsNullOrEmpty(Config.FilePath))
+                    {
+                        FileHelpers.OpenFile(Config.FilePath);
+                    }
                     break;
                 case ToastClickAction.Upload:
                     if (!string.IsNullOrEmpty(Config.FilePath))
@@ -403,6 +412,14 @@ namespace ShareX
                     if (!string.IsNullOrEmpty(Config.FilePath) && FileHelpers.IsImageFile(Config.FilePath))
                     {
                         TaskHelpers.PinToScreen(Config.FilePath);
+                    }
+                    break;
+                case ToastClickAction.DeleteFile:
+                    if (!string.IsNullOrEmpty(Config.FilePath) &&
+                        MessageBox.Show(Resources.MainForm_tsmiDeleteSelectedFile_Click_Do_you_really_want_to_delete_this_file_,
+                        "ShareX - " + Resources.MainForm_tsmiDeleteSelectedFile_Click_File_delete_confirmation, MessageBoxButtons.YesNo) == DialogResult.Yes)
+                    {
+                        FileHelpers.DeleteFile(Config.FilePath, true);
                     }
                     break;
             }

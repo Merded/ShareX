@@ -249,12 +249,6 @@
   <data name="tsmiDeleteSelectedFile.Text" xml:space="preserve">
     <value>删除本地文件...</value>
   </data>
-  <data name="tsmiDestinationSettings.Text" xml:space="preserve">
-    <value>上传目标设置...</value>
-  </data>
-  <data name="tsmiDNSChanger.Text" xml:space="preserve">
-    <value>修改 DNS...</value>
-  </data>
   <data name="tsmiEditSelectedFile.Text" xml:space="preserve">
     <value>编辑图像...</value>
   </data>
@@ -263,9 +257,6 @@
   </data>
   <data name="tsmiFullscreen.Text" xml:space="preserve">
     <value>全屏</value>
-  </data>
-  <data name="tsmiHashCheck.Text" xml:space="preserve">
-    <value>哈希值（Hash）检查...</value>
   </data>
   <data name="tsmiImageEffects.Text" xml:space="preserve">
     <value>图像特效...</value>
@@ -393,9 +384,6 @@
   <data name="tsmiTrayDestinationSettings.Text" xml:space="preserve">
     <value>目的地设置...</value>
   </data>
-  <data name="tsmiTrayDNSChanger.Text" xml:space="preserve">
-    <value>修改 DNS...</value>
-  </data>
   <data name="tsmiTrayExit.Text" xml:space="preserve">
     <value>退出</value>
   </data>
@@ -404,9 +392,6 @@
   </data>
   <data name="tsmiTrayFullscreen.Text" xml:space="preserve">
     <value>全屏</value>
-  </data>
-  <data name="tsmiTrayHashCheck.Text" xml:space="preserve">
-    <value>哈希值（Hash）检查...</value>
   </data>
   <data name="tsmiTrayHistory.Text" xml:space="preserve">
     <value>历史记录...</value>
@@ -468,9 +453,6 @@
   <data name="tsmiTrayTools.Text" xml:space="preserve">
     <value>工具</value>
   </data>
-  <data name="tsmiTrayTweetMessage.Text" xml:space="preserve">
-    <value>Tweet消息...</value>
-  </data>
   <data name="tsmiTrayUpload.Text" xml:space="preserve">
     <value>上传</value>
   </data>
@@ -500,9 +482,6 @@
   </data>
   <data name="tsmiTrayWorkflows.Text" xml:space="preserve">
     <value>快捷动作</value>
-  </data>
-  <data name="tsmiTweetMessage.Text" xml:space="preserve">
-    <value>发推文...</value>
   </data>
   <data name="tsmiUploadClipboard.Text" xml:space="preserve">
     <value>从剪贴板上传...</value>
@@ -569,9 +548,6 @@
   </data>
   <data name="tsmiDownloadSelectedURL.Text" xml:space="preserve">
     <value>下载</value>
-  </data>
-  <data name="niTray.Text" xml:space="preserve">
-    <value>ShareX</value>
   </data>
   <data name="tsmiDeleteSelectedItem.Text" xml:space="preserve">
     <value>从列表中删除任务</value>
@@ -687,9 +663,6 @@
   <data name="tsmiScreenshotDelay5.Text" xml:space="preserve">
     <value>5 秒</value>
   </data>
-  <data name="tsmiCustomUploaderSettings.Text" xml:space="preserve">
-    <value>自定义上传目标...</value>
-  </data>
   <data name="tsmiCopyImageDimensions.Text" xml:space="preserve">
     <value>图像尺寸</value>
   </data>
@@ -722,9 +695,6 @@
   </data>
   <data name="tsmiTrayCustomUploaderSettings.Text" xml:space="preserve">
     <value>自定上传器设置...</value>
-  </data>
-  <data name="tsbTwitter.Text" xml:space="preserve">
-    <value>Twitter...</value>
   </data>
   <data name="tsbDiscord.Text" xml:space="preserve">
     <value>Discord...</value>
@@ -759,9 +729,6 @@
   <data name="tsmiBorderlessWindow.Text" xml:space="preserve">
     <value>无边框窗口...</value>
   </data>
-  <data name="tsmiGoogleImageSearch.Text" xml:space="preserve">
-    <value>Google 图像搜索...</value>
-  </data>
   <data name="tsmiImageViewer.Text" xml:space="preserve">
     <value>图像查看器...</value>
   </data>
@@ -788,5 +755,68 @@
   </data>
   <data name="tsmiCombineImagesVertically.Text" xml:space="preserve">
     <value>垂直叠放</value>
+  </data>
+  <data name="tsmiImageBeautifier.Text" xml:space="preserve">
+    <value>图片美化工具...</value>
+  </data>
+  <data name="tsmiTrayImageBeautifier.Text" xml:space="preserve">
+    <value>图片美化工具...</value>
+  </data>
+  <data name="tsmiHashChecker.Text" xml:space="preserve">
+    <value>哈希（Hash） 检查...</value>
+  </data>
+  <data name="tsmiTrayHashChecker.Text" xml:space="preserve">
+    <value>哈希（Hash） 检查...</value>
+  </data>
+  <data name="tsmiBeautifyImage.Text" xml:space="preserve">
+    <value>美化图片...</value>
+  </data>
+  <data name="tsmiPinToScreen.Text" xml:space="preserve">
+    <value>固定到屏幕...</value>
+  </data>
+  <data name="tsmiTrayPinToScreen.Text" xml:space="preserve">
+    <value>固定到屏幕...</value>
+  </data>
+  <data name="tsmiPinSelectedFile.Text" xml:space="preserve">
+    <value>固定到屏幕</value>
+  </data>
+  <data name="tsbX.Text" xml:space="preserve">
+    <value>关注 @ShareX...</value>
+  </data>
+  <data name="cDescription.HeaderText" xml:space="preserve">
+    <value>描述</value>
+  </data>
+  <data name="cHotkey.HeaderText" xml:space="preserve">
+    <value>快捷键</value>
+  </data>
+  <data name="niTray.Text" xml:space="preserve">
+    <value>ShareX</value>
+  </data>
+  <data name="tsbDestinationSettings.Text" xml:space="preserve">
+    <value>目标设置...</value>
+  </data>
+  <data name="tsbCustomUploaderSettings.Text" xml:space="preserve">
+    <value>自定义上传设置...</value>
+  </data>
+  <data name="tsmiMetadata.Text" xml:space="preserve">
+    <value>元数据...</value>
+  </data>
+  <data name="tsmiAI.Text" xml:space="preserve">
+    <value>分析图片...</value>
+  </data>
+  <data name="tsmiAnalyzeImage.Text" xml:space="preserve">
+    <value>分析图片...</value>
+  </data>
+  <data name="tsmiGoogleLens.Text" xml:space="preserve">
+    <value>谷歌智慧镜头（Google Lens）...</value>
+  </data>
+  <data name="tsmiPinSelectedFile.ShortcutKeyDisplayString" xml:space="preserve">
+    <value>Ctrl+P</value>
+  </data>
+  <data name="tsmiTrayAI.Text" xml:space="preserve">
+    <value>分析图片...</value>
+  </data>
+  <data name="tsmiTrayMetadata.Text" xml:space="preserve">
+    <value>元数据...</value>
   </data>
 </root>

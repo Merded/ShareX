@@ -2,7 +2,7 @@
 
 /*
     ShareX - A program that allows you to take screenshots and share any file type
-    Copyright (c) 2007-2024 ShareX Team
+    Copyright (c) 2007-2026 ShareX Team
 
     This program is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License
@@ -52,6 +52,8 @@ namespace ShareX
     public enum SupportedLanguage
     {
         Automatic, // Localized
+        [Description("العربية (Arabic)")]
+        Arabic,
         [Description("Nederlands (Dutch)")]
         Dutch,
         [Description("English")]
@@ -142,12 +144,14 @@ namespace ShareX
         PerformActions = 1 << 11,
         CopyFileToClipboard = 1 << 12,
         CopyFilePathToClipboard = 1 << 13,
-        ShowInExplorer = 1 << 14,
-        ScanQRCode = 1 << 15,
-        DoOCR = 1 << 16,
-        ShowBeforeUploadWindow = 1 << 17,
-        UploadImageToHost = 1 << 18,
-        DeleteFile = 1 << 19
+        CopyFolderPathToClipboard = 1 << 14,
+        ShowInExplorer = 1 << 15,
+        AnalyzeImage = 1 << 16,
+        ScanQRCode = 1 << 17,
+        DoOCR = 1 << 18,
+        ShowBeforeUploadWindow = 1 << 19,
+        UploadImageToHost = 1 << 20,
+        DeleteFile = 1 << 21
     }
 
     [Flags]
@@ -203,8 +207,6 @@ namespace ShareX
         [Category(EnumExtensions.HotkeyType_Category_Upload)]
         ShortenURL,
         [Category(EnumExtensions.HotkeyType_Category_Upload)]
-        TweetMessage,
-        [Category(EnumExtensions.HotkeyType_Category_Upload)]
         StopUploads,
         // Screen capture
         [Category(EnumExtensions.HotkeyType_Category_ScreenCapture)]
@@ -231,6 +233,8 @@ namespace ShareX
         AutoCapture,
         [Category(EnumExtensions.HotkeyType_Category_ScreenCapture)]
         StartAutoCapture,
+        [Category(EnumExtensions.HotkeyType_Category_ScreenCapture)]
+        StopAutoCapture,
         // Screen record
         [Category(EnumExtensions.HotkeyType_Category_ScreenRecord)]
         ScreenRecorder,
@@ -270,6 +274,8 @@ namespace ShareX
         [Category(EnumExtensions.HotkeyType_Category_Tools)]
         PinToScreenFromFile,
         [Category(EnumExtensions.HotkeyType_Category_Tools)]
+        PinToScreenCloseAll,
+        [Category(EnumExtensions.HotkeyType_Category_Tools)]
         ImageEditor,
         [Category(EnumExtensions.HotkeyType_Category_Tools)]
         ImageBeautifier,
@@ -288,13 +294,21 @@ namespace ShareX
         [Category(EnumExtensions.HotkeyType_Category_Tools)]
         VideoThumbnailer,
         [Category(EnumExtensions.HotkeyType_Category_Tools)]
+        AnalyzeImage,
+        [Category(EnumExtensions.HotkeyType_Category_Tools)]
         OCR,
         [Category(EnumExtensions.HotkeyType_Category_Tools)]
         QRCode,
         [Category(EnumExtensions.HotkeyType_Category_Tools)]
         QRCodeDecodeFromScreen,
         [Category(EnumExtensions.HotkeyType_Category_Tools)]
+        QRCodeScanRegion,
+        [Category(EnumExtensions.HotkeyType_Category_Tools)]
         HashCheck,
+        [Category(EnumExtensions.HotkeyType_Category_Tools)]
+        Metadata,
+        [Category(EnumExtensions.HotkeyType_Category_Tools)]
+        StripMetadata,
         [Category(EnumExtensions.HotkeyType_Category_Tools)]
         IndexFolder,
         [Category(EnumExtensions.HotkeyType_Category_Tools)]
@@ -302,11 +316,13 @@ namespace ShareX
         [Category(EnumExtensions.HotkeyType_Category_Tools)]
         BorderlessWindow,
         [Category(EnumExtensions.HotkeyType_Category_Tools)]
+        ActiveWindowBorderless,
+        [Category(EnumExtensions.HotkeyType_Category_Tools)]
+        ActiveWindowTopMost,
+        [Category(EnumExtensions.HotkeyType_Category_Tools)]
         InspectWindow,
         [Category(EnumExtensions.HotkeyType_Category_Tools)]
         MonitorTest,
-        [Category(EnumExtensions.HotkeyType_Category_Tools)]
-        DNSChanger,
         // Other
         [Category(EnumExtensions.HotkeyType_Category_Other)]
         DisableHotkeys,
@@ -338,7 +354,8 @@ namespace ShareX
         OpenFolder,
         OpenUrl,
         Upload,
-        PinToScreen
+        PinToScreen,
+        DeleteFile
     }
 
     public enum ThumbnailViewClickAction // Localized
@@ -380,6 +397,12 @@ namespace ShareX
         Default, Light, Transparent
     }
 
+    public enum ScreenTearingTestMode
+    {
+        VerticalLines,
+        HorizontalLines
+    }
+
 #if !MicrosoftStore
     public enum StartupState
     {
@@ -400,13 +423,6 @@ namespace ShareX
     }
 #endif
 
-    public enum BalloonTipClickAction
-    {
-        None,
-        OpenURL,
-        OpenDebugLog
-    }
-
     public enum TaskViewMode // Localized
     {
         ListView,
@@ -421,5 +437,13 @@ namespace ShareX
         UploadAudio,
         UploadText,
         ShortenURL
+    }
+
+    public enum NotificationSound
+    {
+        Capture,
+        TaskCompleted,
+        ActionCompleted,
+        Error
     }
 }

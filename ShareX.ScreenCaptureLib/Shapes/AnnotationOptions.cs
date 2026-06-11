@@ -2,7 +2,7 @@
 
 /*
     ShareX - A program that allows you to take screenshots and share any file type
-    Copyright (c) 2007-2024 ShareX Team
+    Copyright (c) 2007-2026 ShareX Team
 
     This program is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License
@@ -49,6 +49,10 @@ namespace ShareX.ScreenCaptureLib
         public Color ShadowColor { get; set; } = Color.FromArgb(125, 0, 0, 0);
         public Point ShadowOffset { get; set; } = new Point(0, 1);
 
+        // Freehand drawing
+        public int FreehandSmoothing { get; set; } = 0;
+        public bool FreehandCurveInterpolation { get; set; } = true;
+
         // Line, arrow drawing
         public int LineCenterPointCount { get; set; } = 1;
 
@@ -90,10 +94,7 @@ namespace ShareX.ScreenCaptureLib
         public int MagnifyStrength { get; set; } = 200;
 
         // Sticker drawing
-        public List<StickerPackInfo> StickerPacks = new List<StickerPackInfo>()
-        {
-            new StickerPackInfo(@"Stickers\BlobEmoji", "Blob Emoji")
-        };
+        public List<StickerPackInfo> StickerPacks = new List<StickerPackInfo>();
         public int SelectedStickerPack = 0;
         public int StickerSize { get; set; } = 64;
         public string LastStickerPath { get; set; }
@@ -106,6 +107,11 @@ namespace ShareX.ScreenCaptureLib
 
         // Highlight effect
         public Color HighlightColor { get; set; } = Color.Yellow;
+
+        // Spotlight tool
+        public int SpotlightDim { get; set; } = 30;
+        public int SpotlightBlur { get; set; } = 10;
+        public bool SpotlightEllipse { get; set; } = false;
 
         // Cut out tool
         public CutOutEffectType CutOutEffectType { get; set; } = CutOutEffectType.None;

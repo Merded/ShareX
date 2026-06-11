@@ -2,7 +2,7 @@
 
 /*
     ShareX - A program that allows you to take screenshots and share any file type
-    Copyright (c) 2007-2024 ShareX Team
+    Copyright (c) 2007-2026 ShareX Team
 
     This program is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License
@@ -110,7 +110,6 @@ namespace ShareX
             cbTrayIconProgressEnabled.Checked = Program.Settings.TrayIconProgressEnabled;
             cbTaskbarProgressEnabled.Enabled = TaskbarManager.IsPlatformSupported;
             cbTaskbarProgressEnabled.Checked = Program.Settings.TaskbarProgressEnabled;
-            cbUseCustomTheme.Checked = Program.Settings.UseCustomTheme;
             cbUseWhiteShareXIcon.Checked = Program.Settings.UseWhiteShareXIcon;
             cbRememberMainFormPosition.Checked = Program.Settings.RememberMainFormPosition;
             cbRememberMainFormSize.Checked = Program.Settings.RememberMainFormSize;
@@ -478,8 +477,7 @@ namespace ShareX
 
         private void UpdateThemeControls()
         {
-            btnThemeAdd.Enabled = eiTheme.Enabled = btnThemeReset.Enabled = pgTheme.Enabled = Program.Settings.UseCustomTheme;
-            cbThemes.Enabled = btnThemeRemove.Enabled = Program.Settings.UseCustomTheme && cbThemes.Items.Count > 0;
+            cbThemes.Enabled = btnThemeRemove.Enabled = cbThemes.Items.Count > 0;
         }
 
         private void ApplySelectedTheme()
@@ -501,28 +499,24 @@ namespace ShareX
             }
         }
 
-        private void CbUseCustomTheme_CheckedChanged(object sender, EventArgs e)
-        {
-            Program.Settings.UseCustomTheme = cbUseCustomTheme.Checked;
-            UpdateThemeControls();
-            ApplySelectedTheme();
-        }
-
         private void CbThemes_SelectedIndexChanged(object sender, EventArgs e)
         {
-            Program.Settings.SelectedTheme = cbThemes.SelectedIndex;
-
-            if (cbThemes.SelectedItem != null)
+            if (ready)
             {
-                pgTheme.SelectedObject = cbThemes.SelectedItem;
-            }
-            else
-            {
-                pgTheme.SelectedObject = null;
-            }
+                Program.Settings.SelectedTheme = cbThemes.SelectedIndex;
 
-            UpdateThemeControls();
-            ApplySelectedTheme();
+                if (cbThemes.SelectedItem != null)
+                {
+                    pgTheme.SelectedObject = cbThemes.SelectedItem;
+                }
+                else
+                {
+                    pgTheme.SelectedObject = null;
+                }
+
+                UpdateThemeControls();
+                ApplySelectedTheme();
+            }
         }
 
         private void BtnThemeAdd_Click(object sender, EventArgs e)
@@ -757,7 +751,8 @@ namespace ShareX
                 using (SaveFileDialog sfd = new SaveFileDialog())
                 {
                     sfd.DefaultExt = "sxb";
-                    sfd.FileName = $"ShareX-{Helpers.GetApplicationVersion()}-backup.sxb";
+                    string sanitizedMachineName = FileHelpers.SanitizeFileName(Environment.MachineName.ToLowerInvariant());
+                    sfd.FileName = $"ShareX-{Helpers.GetApplicationVersion()}-{sanitizedMachineName}-backup.sxb";
                     sfd.Filter = "ShareX backup (*.sxb)|*.sxb|All files (*.*)|*.*";
 
                     if (sfd.ShowDialog() == DialogResult.OK)

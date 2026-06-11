@@ -2,7 +2,7 @@
 
 /*
     ShareX - A program that allows you to take screenshots and share any file type
-    Copyright (c) 2007-2024 ShareX Team
+    Copyright (c) 2007-2026 ShareX Team
 
     This program is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License
@@ -191,6 +191,7 @@ namespace ShareX
 
             cbPlaySoundAfterCapture.Checked = TaskSettings.GeneralSettings.PlaySoundAfterCapture;
             cbPlaySoundAfterUpload.Checked = TaskSettings.GeneralSettings.PlaySoundAfterUpload;
+            cbPlaySoundAfterAction.Checked = TaskSettings.GeneralSettings.PlaySoundAfterAction;
             cbShowToastNotificationAfterTaskCompleted.Checked = TaskSettings.GeneralSettings.ShowToastNotificationAfterTaskCompleted;
             gbToastWindow.Enabled = TaskSettings.GeneralSettings.ShowToastNotificationAfterTaskCompleted;
             nudToastWindowDuration.SetValue((decimal)TaskSettings.GeneralSettings.ToastWindowDuration);
@@ -206,17 +207,19 @@ namespace ShareX
             cbToastWindowMiddleClickAction.Items.AddRange(Helpers.GetLocalizedEnumDescriptions<ToastClickAction>());
             cbToastWindowMiddleClickAction.SelectedIndex = (int)TaskSettings.GeneralSettings.ToastWindowMiddleClickAction;
             cbToastWindowAutoHide.Checked = TaskSettings.GeneralSettings.ToastWindowAutoHide;
+            cbDisableNotificationsOnFullscreen.Checked = TaskSettings.GeneralSettings.DisableNotificationsOnFullscreen;
             cbUseCustomCaptureSound.Checked = TaskSettings.GeneralSettings.UseCustomCaptureSound;
             txtCustomCaptureSoundPath.Enabled = btnCustomCaptureSoundPath.Enabled = TaskSettings.GeneralSettings.UseCustomCaptureSound;
             txtCustomCaptureSoundPath.Text = TaskSettings.GeneralSettings.CustomCaptureSoundPath;
             cbUseCustomTaskCompletedSound.Checked = TaskSettings.GeneralSettings.UseCustomTaskCompletedSound;
             txtCustomTaskCompletedSoundPath.Enabled = btnCustomTaskCompletedSoundPath.Enabled = TaskSettings.GeneralSettings.UseCustomTaskCompletedSound;
             txtCustomTaskCompletedSoundPath.Text = TaskSettings.GeneralSettings.CustomTaskCompletedSoundPath;
+            cbUseCustomActionCompletedSound.Checked = TaskSettings.GeneralSettings.UseCustomActionCompletedSound;
+            txtCustomActionCompletedSoundPath.Enabled = btnCustomActionCompletedSoundPath.Enabled = TaskSettings.GeneralSettings.UseCustomActionCompletedSound;
+            txtCustomActionCompletedSoundPath.Text = TaskSettings.GeneralSettings.CustomActionCompletedSoundPath;
             cbUseCustomErrorSound.Checked = TaskSettings.GeneralSettings.UseCustomErrorSound;
             txtCustomErrorSoundPath.Enabled = btnCustomErrorSoundPath.Enabled = TaskSettings.GeneralSettings.UseCustomErrorSound;
             txtCustomErrorSoundPath.Text = TaskSettings.GeneralSettings.CustomErrorSoundPath;
-            cbDisableNotifications.Checked = TaskSettings.GeneralSettings.DisableNotifications;
-            cbDisableNotificationsOnFullscreen.Checked = TaskSettings.GeneralSettings.DisableNotificationsOnFullscreen;
 
             #endregion
 
@@ -275,6 +278,7 @@ namespace ShareX
             cbCaptureShadow.Checked = TaskSettings.CaptureSettings.CaptureShadow;
             nudCaptureShadowOffset.SetValue(TaskSettings.CaptureSettings.CaptureShadowOffset);
             cbCaptureClientArea.Checked = TaskSettings.CaptureSettings.CaptureClientArea;
+            cbCaptureAutoHideDesktopIcons.Checked = TaskSettings.CaptureSettings.CaptureAutoHideDesktopIcons;
             cbCaptureAutoHideTaskbar.Checked = TaskSettings.CaptureSettings.CaptureAutoHideTaskbar;
             nudCaptureCustomRegionX.SetValue(TaskSettings.CaptureSettings.CaptureCustomRegion.X);
             nudCaptureCustomRegionY.SetValue(TaskSettings.CaptureSettings.CaptureCustomRegion.Y);
@@ -315,6 +319,7 @@ namespace ShareX
             nudRegionCaptureMagnifierPixelSize.Minimum = RegionCaptureOptions.MagnifierPixelSizeMinimum;
             nudRegionCaptureMagnifierPixelSize.Maximum = RegionCaptureOptions.MagnifierPixelSizeMaximum;
             nudRegionCaptureMagnifierPixelSize.SetValue(TaskSettings.CaptureSettings.SurfaceOptions.MagnifierPixelSize);
+            cbRegionCaptureShowCenterCrosshair.Checked = TaskSettings.CaptureSettings.SurfaceOptions.ShowCenterCrosshair;
             cbRegionCaptureShowCrosshair.Checked = TaskSettings.CaptureSettings.SurfaceOptions.ShowCrosshair;
             cbRegionCaptureIsFixedSize.Checked = TaskSettings.CaptureSettings.SurfaceOptions.IsFixedSize;
             nudRegionCaptureFixedSizeWidth.Enabled = nudRegionCaptureFixedSizeHeight.Enabled = TaskSettings.CaptureSettings.SurfaceOptions.IsFixedSize;
@@ -403,7 +408,7 @@ namespace ShareX
             CodeMenu.Create<CodeMenuEntryFilename>(txtNameFormatPattern, CodeMenuEntryFilename.n, CodeMenuEntryFilename.t, CodeMenuEntryFilename.pn);
             CodeMenu.Create<CodeMenuEntryFilename>(txtNameFormatPatternActiveWindow, CodeMenuEntryFilename.n);
             cbFileUploadUseNamePattern.Checked = TaskSettings.UploadSettings.FileUploadUseNamePattern;
-            nudAutoIncrementNumber.Value = Program.Settings.NameParserAutoIncrementNumber;
+            nudAutoIncrementNumber.SetValue(Program.Settings.NameParserAutoIncrementNumber);
             UpdateNameFormatPreviews();
             cbNameFormatCustomTimeZone.Checked = cbNameFormatTimeZone.Enabled = TaskSettings.UploadSettings.UseCustomTimeZone;
             cbNameFormatTimeZone.Items.AddRange(TimeZoneInfo.GetSystemTimeZones().ToArray());
@@ -475,6 +480,10 @@ namespace ShareX
 
             #region Tools
 
+            #region General
+
+            cbImageEditorUseLegacyImageEditor.Checked = TaskSettings.ToolsSettings.UseLegacyImageEditor;
+
             CodeMenu.Create<CodeMenuEntryPixelInfo>(txtToolsScreenColorPickerFormat);
             txtToolsScreenColorPickerFormat.Text = TaskSettings.ToolsSettings.ScreenColorPickerFormat;
 
@@ -483,6 +492,8 @@ namespace ShareX
 
             CodeMenu.Create<CodeMenuEntryPixelInfo>(txtToolsScreenColorPickerInfoText);
             txtToolsScreenColorPickerInfoText.Text = TaskSettings.ToolsSettings.ScreenColorPickerInfoText;
+
+            #endregion
 
             #endregion Tools
 
@@ -827,6 +838,11 @@ namespace ShareX
             TaskSettings.GeneralSettings.PlaySoundAfterUpload = cbPlaySoundAfterUpload.Checked;
         }
 
+        private void cbPlaySoundAfterAction_CheckedChanged(object sender, EventArgs e)
+        {
+            TaskSettings.GeneralSettings.PlaySoundAfterAction = cbPlaySoundAfterAction.Checked;
+        }
+
         private void cbShowToastNotificationAfterTaskCompleted_CheckedChanged(object sender, EventArgs e)
         {
             TaskSettings.GeneralSettings.ShowToastNotificationAfterTaskCompleted = cbShowToastNotificationAfterTaskCompleted.Checked;
@@ -878,6 +894,11 @@ namespace ShareX
             TaskSettings.GeneralSettings.ToastWindowAutoHide = cbToastWindowAutoHide.Checked;
         }
 
+        private void cbDisableNotificationsOnFullscreen_CheckedChanged(object sender, EventArgs e)
+        {
+            TaskSettings.GeneralSettings.DisableNotificationsOnFullscreen = cbDisableNotificationsOnFullscreen.Checked;
+        }
+
         private void cbUseCustomCaptureSound_CheckedChanged(object sender, EventArgs e)
         {
             TaskSettings.GeneralSettings.UseCustomCaptureSound = cbUseCustomCaptureSound.Checked;
@@ -910,6 +931,22 @@ namespace ShareX
             FileHelpers.BrowseFile(txtCustomTaskCompletedSoundPath, filter: "Audio file (*.wav)|*.wav");
         }
 
+        private void cbUseCustomActionCompletedSound_CheckedChanged(object sender, EventArgs e)
+        {
+            TaskSettings.GeneralSettings.UseCustomActionCompletedSound = cbUseCustomActionCompletedSound.Checked;
+            txtCustomActionCompletedSoundPath.Enabled = btnCustomActionCompletedSoundPath.Enabled = TaskSettings.GeneralSettings.UseCustomActionCompletedSound;
+        }
+
+        private void txtCustomActionCompletedSoundPath_TextChanged(object sender, EventArgs e)
+        {
+            TaskSettings.GeneralSettings.CustomActionCompletedSoundPath = txtCustomActionCompletedSoundPath.Text;
+        }
+
+        private void btnCustomActionCompletedSoundPath_Click(object sender, EventArgs e)
+        {
+            FileHelpers.BrowseFile(txtCustomActionCompletedSoundPath, filter: "Audio file (*.wav)|*.wav");
+        }
+
         private void cbUseCustomErrorSound_CheckedChanged(object sender, EventArgs e)
         {
             TaskSettings.GeneralSettings.UseCustomErrorSound = cbUseCustomErrorSound.Checked;
@@ -924,16 +961,6 @@ namespace ShareX
         private void btnCustomErrorSoundPath_Click(object sender, EventArgs e)
         {
             FileHelpers.BrowseFile(txtCustomErrorSoundPath, filter: "Audio file (*.wav)|*.wav");
-        }
-
-        private void cbDisableNotifications_CheckedChanged(object sender, EventArgs e)
-        {
-            TaskSettings.GeneralSettings.DisableNotifications = cbDisableNotifications.Checked;
-        }
-
-        private void cbDisableNotificationsOnFullscreen_CheckedChanged(object sender, EventArgs e)
-        {
-            TaskSettings.GeneralSettings.DisableNotificationsOnFullscreen = cbDisableNotificationsOnFullscreen.Checked;
         }
 
         #endregion General
@@ -1070,6 +1097,11 @@ namespace ShareX
         private void cbCaptureClientArea_CheckedChanged(object sender, EventArgs e)
         {
             TaskSettings.CaptureSettings.CaptureClientArea = cbCaptureClientArea.Checked;
+        }
+
+        private void cbCaptureAutoHideDesktopIcons_CheckedChanged(object sender, EventArgs e)
+        {
+            TaskSettings.CaptureSettings.CaptureAutoHideDesktopIcons = cbCaptureAutoHideDesktopIcons.Checked;
         }
 
         private void cbCaptureAutoHideTaskbar_CheckedChanged(object sender, EventArgs e)
@@ -1230,6 +1262,11 @@ namespace ShareX
             {
                 TaskSettings.CaptureSettings.SurfaceOptions.MagnifierPixelSize = (int)nudRegionCaptureMagnifierPixelSize.Value;
             }
+        }
+
+        private void cbRegionCaptureShowCenterCrosshair_CheckedChanged(object sender, EventArgs e)
+        {
+            TaskSettings.CaptureSettings.SurfaceOptions.ShowCenterCrosshair = cbRegionCaptureShowCenterCrosshair.Checked;
         }
 
         private void cbRegionCaptureShowCrosshair_CheckedChanged(object sender, EventArgs e)
@@ -1783,10 +1820,17 @@ namespace ShareX
 
         #region Tools
 
+        #region General
+
         private void cbUseDefaultToolsSettings_CheckedChanged(object sender, EventArgs e)
         {
             TaskSettings.UseDefaultToolsSettings = !cbOverrideToolsSettings.Checked;
             UpdateDefaultSettingVisibility();
+        }
+
+        private void cbImageEditorUseLegacyImageEditor_CheckedChanged(object sender, EventArgs e)
+        {
+            TaskSettings.ToolsSettings.UseLegacyImageEditor = cbImageEditorUseLegacyImageEditor.Checked;
         }
 
         private void txtToolsScreenColorPickerFormat_TextChanged(object sender, EventArgs e)
@@ -1803,6 +1847,8 @@ namespace ShareX
         {
             TaskSettings.ToolsSettings.ScreenColorPickerInfoText = txtToolsScreenColorPickerInfoText.Text;
         }
+
+        #endregion
 
         #endregion Tools
 

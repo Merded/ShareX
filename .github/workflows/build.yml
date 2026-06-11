@@ -19,7 +19,12 @@ jobs:
         configuration:
           - Release
         platform:
-          - Any CPU
+          - x64
+          - ARM64
+        exclude:
+          # Steam configuration doesn't support ARM64
+          - configuration: Steam
+            platform: ARM64
 
     env:
       SOLUTION_FILE_PATH: ShareX.sln
@@ -30,10 +35,18 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
-      - name: Add msbuild to PATH
-        uses: microsoft/setup-msbuild@v2
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: 9.0.x
+
+      - name: Set PLATFORM & RUNTIME_ID
+        run: |
+          $platform = if ("${{ matrix.platform }}" -eq "ARM64") { "arm64" } else { "x64" }
+          echo "PLATFORM=$platform" >> $env:GITHUB_ENV
+          echo "RUNTIME_ID=win-$platform" >> $env:GITHUB_ENV
 
       - name: Set APP_VERSION
         run: |
@@ -58,28 +71,37 @@ jobs:
           Invoke-WebRequest -Uri "$env:API_KEYS" -OutFile "ShareX.UploadersLib\APIKeys\APIKeysLocal.cs"
 
       - name: Restore NuGet packages
-        working-directory: ${{ env.GITHUB_WORKSPACE }}
-        run: nuget restore "${{ env.SOLUTION_FILE_PATH }}" -Project2ProjectTimeOut 300
+        run: |
+          dotnet restore --runtime "${{ env.RUNTIME_ID }}" "${{ env.SOLUTION_FILE_PATH }}"
+          if ("${{ matrix.platform }}" -eq "ARM64") {
+            # ShareX.Setup always builds as x64, so restore win-x64 packages too
+            dotnet restore --runtime "win-x64" "ShareX.Setup\ShareX.Setup.csproj"
+          }
 
       - name: Build
-        working-directory: ${{ env.GITHUB_WORKSPACE }}
-        run: msbuild -m -p:Configuration="${{ matrix.configuration }}" -p:Platform="${{ matrix.platform }}" "${{ env.SOLUTION_FILE_PATH }}"
+        run: dotnet build --no-restore --configuration "${{ matrix.configuration }}" -p:Platform="${{ matrix.platform }}" --self-contained true /m:1 "${{ env.SOLUTION_FILE_PATH }}"
+
+      - name: Build Setup (x64)
+        if: matrix.platform == 'ARM64'
+        run: |
+          # Build ShareX.Setup and its dependencies for x64 since it can't run as ARM64 on CI
+          dotnet build --configuration "${{ matrix.configuration }}" -p:Platform="x64" --self-contained true "ShareX.Setup\ShareX.Setup.csproj"
 
       - name: Setup
         working-directory: ${{ env.GITHUB_WORKSPACE }}
         run: |
-          & "ShareX.Setup\bin\${{ matrix.configuration }}\ShareX.Setup.exe" -silent -job "${{ matrix.configuration }}"
+          & "ShareX.Setup\bin\${{ matrix.configuration }}\win-x64\ShareX.Setup.exe" -silent -job "${{ matrix.configuration }}" -platform "${{ matrix.platform }}"
 
-      - name: Upload artifact (Setup)
-        if: matrix.configuration == 'Release'
-        uses: actions/upload-artifact@v4
+      - name: Upload artifact (Setup-x64)
+        if: matrix.configuration == 'Release' && matrix.platform == 'x64'
+        uses: actions/upload-artifact@v7
         with:
-          name: Setup
-          path: Output\ShareX-${{ env.APP_VERSION }}-setup.exe
+          name: Setup-x64
+          path: Output\ShareX-${{ env.APP_VERSION }}-setup-${{ env.PLATFORM }}.exe
 
-      - name: Upload artifact (Portable)
-        if: matrix.configuration == 'Release'
-        uses: actions/upload-artifact@v4
+      - name: Upload artifact (Setup-ARM64)
+        if: matrix.configuration == 'Release' && matrix.platform == 'ARM64'
+        uses: actions/upload-artifact@v7
         with:
           name: Portable
           path: Output\ShareX-${{ env.APP_VERSION }}-portable.zip

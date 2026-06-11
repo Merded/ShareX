@@ -351,6 +351,12 @@
   <data name="ShapeManager_ArrowHeadDirection" xml:space="preserve">
     <value>Ok başı yönü:</value>
   </data>
+  <data name="ShapeManager_FreehandSmoothing" xml:space="preserve">
+    <value>Yumuşatma:</value>
+  </data>
+  <data name="ShapeManager_FreehandCurveInterpolation" xml:space="preserve">
+    <value>Eğri enterpolasyonu</value>
+  </data>
   <data name="ShapeManager_CreateToolbar_AutoCloseEditorOnTask" xml:space="preserve">
     <value>Görevden sonra editörü otomatik kapat</value>
   </data>
@@ -476,5 +482,14 @@
   </data>
   <data name="CutOutEffectType" xml:space="preserve">
     <value>Kesip çıkarma efekti:</value>
+  </data>
+  <data name="Pause" xml:space="preserve">
+    <value>Duraklat</value>
+  </data>
+  <data name="Resume" xml:space="preserve">
+    <value>Devam et</value>
+  </data>
+  <data name="ShapeManager_CreateToolbar_Redo" xml:space="preserve">
+    <value>Yeniden yap</value>
   </data>
 </root>
