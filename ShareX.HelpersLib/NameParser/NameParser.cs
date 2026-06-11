@@ -305,7 +305,8 @@ namespace ShareX.HelpersLib
             result = result.ReplaceAll(CodeMenuEntryFilename.rx.ToPrefixString().Replace('x', 'X'), () => Helpers.GetRandomChar(Helpers.Hexadecimal.ToUpperInvariant()).ToString());
             result = result.ReplaceAll(CodeMenuEntryFilename.guid.ToPrefixString().ToLowerInvariant(), () => Guid.NewGuid().ToString().ToLowerInvariant());
             result = result.ReplaceAll(CodeMenuEntryFilename.guid.ToPrefixString().ToUpperInvariant(), () => Guid.NewGuid().ToString().ToUpperInvariant());
-            result = result.ReplaceAll(CodeMenuEntryFilename.ulid.ToPrefixString(), () => Ulid.NewUlid().ToString());
+            result = result.ReplaceAll(CodeMenuEntryFilename.ulid.ToPrefixString().ToLowerInvariant(), () => Ulid.NewUlid().ToString().ToLowerInvariant());
+            result = result.ReplaceAll(CodeMenuEntryFilename.ulid.ToPrefixString().ToUpperInvariant(), () => Ulid.NewUlid().ToString().ToUpperInvariant());
             result = result.ReplaceAll(CodeMenuEntryFilename.remoji.ToPrefixString(), () => RandomCrypto.Pick(Emoji.Emojis));
 
             if (Type == NameParserType.FileName)
