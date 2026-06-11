@@ -21,5 +21,6 @@
     <PackageVersion Include="AvaloniaUI.DiagnosticsSupport" Version="2.2.2" />
     <PackageVersion Include="CommunityToolkit.Mvvm" Version="8.4.2" />
     <PackageVersion Include="SkiaSharp" Version="3.119.4" />
+    <PackageVersion Include="Ulid" Version="1.4.1" />
   </ItemGroup>
 </Project>
